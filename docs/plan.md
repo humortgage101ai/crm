@@ -1,8 +1,9 @@
 # Plan (draft)
 
 ## Open questions for Hu
-1. **Where do client documents live?** Options: a OneDrive/SharePoint folder (fits Outlook),
-   Google Drive, or a private database + file storage. Not GitHub.
+1. ~~Where do client documents live?~~ **Decided 2026-10-26: Google Drive**, folder `My Drive/CRM`:
+   `Clients/` (one folder per client), `Inbox - to file/` (new statements land here first),
+   `Ad Spend/` (the ad-spend tracker). Not GitHub.
 2. **Which email account?** Outlook / Microsoft 365 — which mailbox and folder receive
    statements and ad-spend receipts?
 3. **How are clients identified on a statement?** Name, policy number, or lender reference —

@@ -19,4 +19,4 @@ Hu's CRM for the insurance and mortgage business.
 
 Statements, policy numbers, names, addresses and bank details are personal information.
 They are kept out of this repository by `.gitignore`. This repo holds the **code and the
-plan**; the documents themselves live in a private store (decided in `docs/plan.md`).
+plan**; the documents themselves live in Google Drive, in `My Drive/CRM` (see `docs/plan.md`).
