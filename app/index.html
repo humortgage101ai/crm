@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Hu's CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f8; --card:#fff; --ink:#1b1f24; --ink2:#4a525c; --ink3:#6b7480; --line:#e2e5ea;
+  --acc:#1f5fbf; --acc2:#e8f0fc; --ok:#1b7a3d; --okbg:#e6f4ea; --warn:#9a5b00; --warnbg:#fff3df;
+  --bad:#b3261e; --badbg:#fde8e6; --side:#14213d; --sideink:#d7deea;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;font-size:15px;color:var(--ink);background:var(--bg);line-height:1.45}
+a{color:var(--acc)}
+button,input,select,textarea{font:inherit;color:inherit}
+.layout{display:flex;min-height:100vh}
+nav.side{width:220px;background:var(--side);color:var(--sideink);padding:18px 12px;flex-shrink:0;position:sticky;top:0;height:100vh}
+nav.side .brand{font-weight:700;color:#fff;font-size:18px;padding:4px 10px 18px}
+nav.side a{display:flex;gap:10px;align-items:center;color:var(--sideink);text-decoration:none;padding:9px 10px;border-radius:8px;margin-bottom:2px;font-weight:500}
+nav.side a.on,nav.side a:hover{background:rgba(255,255,255,.1);color:#fff}
+nav.side .foot{position:absolute;bottom:16px;left:12px;right:12px;font-size:13px}
+nav.side .foot button{background:none;border:1px solid rgba(255,255,255,.25);color:var(--sideink);border-radius:8px;padding:6px 10px;cursor:pointer;width:100%}
+main{flex:1;padding:24px 28px 80px;max-width:1150px;min-width:0}
+h1{font-size:24px;margin:0 0 4px}
+h2{font-size:17px;margin:0 0 12px}
+.sub{color:var(--ink3);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat .n{font-size:24px;font-weight:700}
+.stat .l{color:var(--ink3);font-size:13px}
+.stat.click{cursor:pointer}.stat.click:hover{border-color:var(--acc)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink3);font-weight:600}
+tr.go{cursor:pointer}tr.go:hover td{background:#f8fafd}
+td.num,th.num{text-align:right;white-space:nowrap}
+.tablewrap{overflow-x:auto}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.p-ok{background:var(--okbg);color:var(--ok)}.p-warn{background:var(--warnbg);color:var(--warn)}.p-bad{background:var(--badbg);color:var(--bad)}.p-mute{background:#eef0f3;color:var(--ink2)}.p-acc{background:var(--acc2);color:var(--acc)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 13px;cursor:pointer;font-weight:500;text-decoration:none;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--acc)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.sm{padding:4px 9px;font-size:13px}
+.btn.danger{color:var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],input[type=search],select,textarea{border:1px solid #cfd4db;border-radius:8px;padding:8px 10px;background:#fff;width:100%}
+textarea{min-height:70px;resize:vertical}
+label{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:4px}
+.form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.form .wide{grid-column:1/-1}
+.muted{color:var(--ink3)}
+.small{font-size:13px}
+.empty{color:var(--ink3);padding:14px 0}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;font-size:14px}
+.kv div:nth-child(odd){color:var(--ink3)}
+.note{border-left:3px solid var(--line);padding:4px 0 4px 12px;margin-bottom:10px}
+.note .when{font-size:12px;color:var(--ink3)}
+.banner{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:14px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 13px;cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+#modal{position:fixed;inset:0;background:rgba(20,25,35,.45);display:none;align-items:flex-start;justify-content:center;padding:40px 14px;overflow:auto;z-index:20}
+#modal.on{display:flex}
+#modal .box{background:#fff;border-radius:14px;padding:20px;max-width:640px;width:100%}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;display:none;z-index:30}
+.login{max-width:380px;margin:12vh auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px}
+.mobilebar{display:none}.show-m{display:none}
+@media (max-width:800px){
+  nav.side{display:none}
+  .mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--side);z-index:10;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom))}
+  .mobilebar a{color:var(--sideink);text-decoration:none;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px}
+  .mobilebar a.on{color:#fff}
+  main{padding:16px 16px 90px}
+  .hide-m{display:none}.show-m{display:inline}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="modal"><div class="box" id="mbox"></div></div>
+<div id="toast"></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+<script>
+// ---------- data layer: Supabase when configured, otherwise demo data in this browser ----------
+const CFG = window.CRM_CONFIG || {};
+const DEMO = !(CFG.supabaseUrl && CFG.supabaseKey);
+const sb = DEMO ? null : supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+const TABLES = ['crm_clients','crm_deals','crm_policies','crm_notes','crm_adspend','crm_settings'];
+let D = {}; // crm_clients: [...], etc.
+
+function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random())); }
+function iso(d){ const z=new Date(d); return z.getFullYear()+'-'+String(z.getMonth()+1).padStart(2,'0')+'-'+String(z.getDate()).padStart(2,'0'); }
+function addDays(n){ const d=new Date(); d.setDate(d.getDate()+n); return iso(d); }
+
+function demoSeed(){
+  const c=(code,last,first,email,phone,kind,source)=>({code,last_name:last,first_name:first,email,phone,kind,source,drive_url:'',notes:'',created_at:new Date().toISOString()});
+  const clients=[
+    c('C0001','Sample','Alex','alex.sample@example.com','604-555-0101','Mortgage','Google Ads'),
+    c('C0002','Example','Jordan','jordan@example.com','604-555-0102','Both','Referral'),
+    c('C0003','Test','Riley','riley.test@example.com','778-555-0103','Insurance','Facebook'),
+    c('C0004','Demo','Casey','casey.demo@example.com','604-555-0104','Mortgage','Realtor'),
+    c('C0005','Placeholder','Morgan','morgan@example.com','236-555-0105','Mortgage','Google Ads'),
+  ];
+  const deal=(client_code,lender,property,amount,rate,term,funded,maturity,status,gross,split,paid)=>({id:uid(),client_code,lender,property,amount,rate,term_months:term,funded_date:funded,maturity_date:maturity,status,renewal_outcome:'',gross,split,paid,paid_date:paid?funded:null,received:paid?gross*(split||90)/100:null,notes:'',created_at:new Date().toISOString()});
+  return {
+    crm_settings:[{id:1,default_split:90,contact_days:120,upcoming_days:180,file_email:''}],
+    crm_clients:clients,
+    crm_deals:[
+      deal('C0001','Big Bank','123 Any St, Burnaby',520000,4.79,60,'2021-12-15',addDays(48),'Active',4680,null,true),
+      deal('C0002','Credit Union','45 Sample Ave, Vancouver',690000,5.09,36,'2023-03-01',addDays(150),'Active',5520,null,true),
+      deal('C0004','Monoline Lender','9 Demo Rd, Surrey',415000,4.59,60,addDays(-20),null,'Active',3735,85,false),
+      deal('C0005','Big Bank','77 Test Cres, Richmond',600000,4.39,24,addDays(-8),null,'In progress',4200,null,false),
+    ],
+    crm_policies:[
+      {id:uid(),client_code:'C0002',carrier:'Life Co',product:'Life',policy_no:'L-000123',premium:84.5,frequency:'Monthly',start_date:'2024-05-01',renewal_date:addDays(190),status:'Active',gross:900,split:null,paid:true,paid_date:'2024-06-01',received:810,notes:''},
+      {id:uid(),client_code:'C0003',carrier:'Shield Insurance',product:'Critical illness',policy_no:'CI-55501',premium:42,frequency:'Monthly',start_date:addDays(-30),renewal_date:addDays(335),status:'Active',gross:500,split:null,paid:false,paid_date:null,received:null,notes:''},
+    ],
+    crm_notes:[
+      {id:uid(),client_code:'C0001',at:new Date(Date.now()-864e5*3).toISOString(),text:'Called about renewal — wants to compare rates in December.'},
+      {id:uid(),client_code:'C0005',at:new Date(Date.now()-864e5).toISOString(),text:'Sent document checklist. Waiting on pay stubs.'},
+    ],
+    crm_adspend:[
+      {id:uid(),day:addDays(-40),platform:'Google Ads',campaign:'Renewals',amount:310,leads:6,notes:''},
+      {id:uid(),day:addDays(-35),platform:'Facebook',campaign:'First-time buyers',amount:180,leads:9,notes:''},
+      {id:uid(),day:addDays(-10),platform:'Google Ads',campaign:'Renewals',amount:295,leads:5,notes:''},
+      {id:uid(),day:addDays(-5),platform:'Facebook',campaign:'First-time buyers',amount:150,leads:7,notes:''},
+      {id:uid(),day:addDays(-2),platform:'Instagram',campaign:'Rates',amount:90,leads:2,notes:''},
+    ],
+  };
+}
+function demoLoad(){ try{ const s=JSON.parse(localStorage.getItem('crm_demo')); if(s&&s.crm_clients) return s; }catch(e){} const s=demoSeed(); localStorage.setItem('crm_demo',JSON.stringify(s)); return s; }
+function demoSave(){ try{ localStorage.setItem('crm_demo',JSON.stringify(D)); }catch(e){} }
+function keyOf(t){ return t==='crm_clients'?'code':'id'; }
+
+async function loadAll(){
+  if(DEMO){ D=demoLoad(); return; }
+  const res=await Promise.all(TABLES.map(t=>sb.from(t).select('*')));
+  res.forEach((r,i)=>{ if(r.error) throw r.error; D[TABLES[i]]=r.data; });
+}
+async function save(t,row){ // insert or update
+  const k=keyOf(t); const exists=row[k]!=null && (D[t]||[]).some(x=>x[k]===row[k]);
+  if(DEMO){
+    if(!exists){ if(row[k]==null) row[k]=uid(); D[t].push(row); } else D[t]=D[t].map(x=>x[k]===row[k]?{...x,...row}:x);
+    demoSave(); return;
+  }
+  const q = exists ? sb.from(t).update(row).eq(k,row[k]) : sb.from(t).insert(row);
+  const {error}=await q; if(error) throw error; await loadAll();
+}
+async function remove(t,keyval){
+  const k=keyOf(t);
+  if(DEMO){ D[t]=D[t].filter(x=>x[k]!==keyval); if(t==='crm_clients'){ ['crm_deals','crm_policies','crm_notes'].forEach(tt=>D[tt]=D[tt].filter(x=>x.client_code!==keyval)); } demoSave(); return; }
+  const {error}=await sb.from(t).delete().eq(k,keyval); if(error) throw error; await loadAll();
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>n==null||n===''?'—':Number(n).toLocaleString('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:Number(n)%1?2:0});
+const fdate=d=>{ if(!d) return '—'; const z=new Date(d.length===10?d+'T12:00':d); return z.toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'}); };
+const S=()=>D.crm_settings[0]||{default_split:90,contact_days:120,upcoming_days:180};
+const clientBy=code=>D.crm_clients.find(c=>c.code===code);
+const cname=c=>c?(c.last_name+(c.first_name?', '+c.first_name:'')):'(unknown client)';
+function toast(m){ const t=$('#toast'); t.textContent=m; t.style.display='block'; clearTimeout(toast.t); toast.t=setTimeout(()=>t.style.display='none',2200); }
+function daysTo(d){ if(!d) return null; return Math.round((new Date(d+'T12:00')-new Date(iso(new Date())+'T12:00'))/864e5); }
+function renewalDate(x){ if(x.maturity_date) return x.maturity_date; if(x.funded_date&&x.term_months){ const d=new Date(x.funded_date+'T12:00'); d.setMonth(d.getMonth()+Number(x.term_months)); return iso(d);} return null; }
+function splitOf(x){ return x.split!=null&&x.split!=='' ? Number(x.split) : Number(S().default_split); }
+function netOf(x){ return x.gross==null||x.gross==='' ? null : Number(x.gross)*splitOf(x)/100; }
+function renewPill(d){
+  const n=daysTo(d); if(n==null) return '<span class="pill p-mute">No date</span>';
+  if(n<0) return `<span class="pill p-bad">${-n} days ago</span>`;
+  if(n<=S().contact_days) return `<span class="pill p-bad">Contact now · ${n} days</span>`;
+  if(n<=S().upcoming_days) return `<span class="pill p-warn">Coming up · ${n} days</span>`;
+  return `<span class="pill p-mute">${Math.round(n/30)} months</span>`;
+}
+function nextCode(){ let m=0; D.crm_clients.forEach(c=>{ const n=parseInt(String(c.code).replace(/\D/g,''),10); if(n>m) m=n; }); return 'C'+String(m+1).padStart(4,'0'); }
+function driveLink(c){ return c.drive_url || ('https://drive.google.com/drive/search?q='+encodeURIComponent('"('+c.code+')"')); }
+function gmailLink(to,subject){ return 'https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(to||'')+(subject?'&su='+encodeURIComponent(subject):''); }
+
+// ---------- pages ----------
+const NAV=[['home','Home','🏠'],['clients','Clients','👥'],['renewals','Renewals','🔁'],['commissions','Commissions','💵'],['adspend','Ad spend','📣'],['settings','Settings','⚙️']];
+function shell(page,inner){
+  const nav=NAV.map(([id,l,i])=>`<a href="#/${id}" class="${page===id?'on':''}"><span>${i}</span>${l}</a>`).join('');
+  const mnav=NAV.filter(n=>n[0]!=='settings').map(([id,l,i])=>`<a href="#/${id}" class="${page===id?'on':''}"><span style="font-size:18px">${i}</span>${l}</a>`).join('');
+  return `<div class="layout"><nav class="side"><div class="brand">Hu's CRM</div>${nav}
+    <div class="foot">${DEMO?'<div class="muted" style="color:#aab4c5;margin-bottom:8px">Demo mode — made-up data</div>':''}${DEMO?'':'<button onclick="signOut()">Sign out</button>'}</div></nav>
+    <main>${DEMO?'<div class="banner">Demo mode: these are made-up clients, saved only in this browser. Nothing here is real.</div>':''}${inner}</main></div>
+    <nav class="mobilebar">${mnav}</nav>`;
+}
+
+function pageHome(){
+  const deals=D.crm_deals, s=S();
+  const due=[...deals.filter(d=>['Active'].includes(d.status)).map(d=>({kind:'Mortgage',x:d,date:renewalDate(d)})),
+             ...D.crm_policies.filter(p=>p.status==='Active').map(p=>({kind:p.product||'Insurance',x:p,date:p.renewal_date}))]
+    .filter(r=>r.date && daysTo(r.date)<=s.upcoming_days).sort((a,b)=>a.date.localeCompare(b.date));
+  const unpaid=[...deals,...D.crm_policies].filter(x=>!x.paid && x.gross);
+  const unpaidSum=unpaid.reduce((a,x)=>a+(netOf(x)||0),0);
+  const ym=iso(new Date()).slice(0,7);
+  const month=D.crm_adspend.filter(a=>a.day&&a.day.startsWith(ym));
+  const spend=month.reduce((a,x)=>a+Number(x.amount||0),0), leads=month.reduce((a,x)=>a+Number(x.leads||0),0);
+  const contactNow=due.filter(r=>daysTo(r.date)<=s.contact_days).length;
+  const inprog=deals.filter(d=>d.status==='In progress');
+  const notes=[...D.crm_notes].sort((a,b)=>b.at.localeCompare(a.at)).slice(0,5);
+  return shell('home',`<h1>Good ${new Date().getHours()<12?'morning':new Date().getHours()<18?'afternoon':'evening'}</h1><p class="sub">${new Date().toLocaleDateString('en-CA',{weekday:'long',month:'long',day:'numeric'})}<span class="show-m"> · <a href="#/settings">Settings</a></span></p>
+  <div class="grid">
+    <div class="stat click" onclick="go('renewals')"><div class="n">${contactNow}</div><div class="l">renewals to contact now</div></div>
+    <div class="stat click" onclick="go('commissions')"><div class="n">${money(unpaidSum)}</div><div class="l">commission not paid yet (${unpaid.length})</div></div>
+    <div class="stat click" onclick="go('adspend')"><div class="n">${money(spend)}</div><div class="l">ad spend this month · ${leads} leads${leads?' · '+money(spend/leads)+' a lead':''}</div></div>
+    <div class="stat click" onclick="go('clients')"><div class="n">${D.crm_clients.length}</div><div class="l">clients</div></div>
+  </div>
+  <div class="card"><div class="spread"><h2 style="margin:0">Renewals coming up</h2><a class="btn sm" href="#/renewals">See all</a></div>${renewTable(due.slice(0,8))}</div>
+  <div class="card"><h2>Deals in progress</h2>${inprog.length?`<div class="tablewrap"><table><tr><th>Client</th><th>Lender</th><th class="num">Amount</th><th class="hide-m">Property</th></tr>${inprog.map(d=>`<tr class="go" onclick="go('client/${d.client_code}')"><td>${esc(cname(clientBy(d.client_code)))}</td><td>${esc(d.lender)}</td><td class="num">${money(d.amount)}</td><td class="hide-m">${esc(d.property)}</td></tr>`).join('')}</table></div>`:'<div class="empty">None right now.</div>'}</div>
+  <div class="card"><h2>Latest notes</h2>${notes.length?notes.map(n=>`<div class="note"><div class="when">${fdate(n.at)} · <a href="#/client/${n.client_code}">${esc(cname(clientBy(n.client_code)))}</a></div>${esc(n.text)}</div>`).join(''):'<div class="empty">No notes yet.</div>'}</div>`);
+}
+
+function renewTable(rows){
+  if(!rows.length) return '<div class="empty">Nothing coming up.</div>';
+  return `<div class="tablewrap"><table><tr><th>Client</th><th>What</th><th>Renews</th><th></th></tr>${rows.map(r=>{ const c=clientBy(r.x.client_code);
+    return `<tr class="go" onclick="go('client/${r.x.client_code}')"><td><b>${esc(cname(c))}</b><div class="small muted">${esc(r.x.client_code)}</div></td><td>${esc(r.kind)}<div class="small muted">${esc(r.kind==='Mortgage'?(r.x.lender||'')+(r.x.amount?' · '+money(r.x.amount):''):(r.x.carrier||''))}</div></td><td>${fdate(r.date)}</td><td>${renewPill(r.date)}</td></tr>`; }).join('')}</table></div>`;
+}
+
+let CQ='', CK='All';
+function pageClients(){
+  const q=CQ.toLowerCase();
+  const list=D.crm_clients.filter(c=>(CK==='All'||c.kind===CK||c.kind==='Both')&&(!q||[c.code,c.last_name,c.first_name,c.email,c.phone].join(' ').toLowerCase().includes(q)))
+    .sort((a,b)=>cname(a).localeCompare(cname(b)));
+  return shell('clients',`<div class="spread"><div><h1>Clients</h1></div><button class="btn pri" onclick="editClient()">+ Add a client</button></div>
+  <div class="card"><div class="row" style="margin-bottom:12px"><input type="search" id="cq" placeholder="Search name, ID, email or phone" value="${esc(CQ)}" oninput="CQ=this.value;drawClients()" style="max-width:340px">
+  <div class="tabs" style="margin:0">${['All','Mortgage','Insurance'].map(k=>`<button class="${CK===k?'on':''}" onclick="CK='${k}';render()">${k}</button>`).join('')}</div></div>
+  <div id="clist">${clientRows(list)}</div></div>`);
+}
+function clientRows(list){
+  if(!list.length) return '<div class="empty">No clients match.</div>';
+  return `<div class="tablewrap"><table><tr><th>Client</th><th class="hide-m">Contact</th><th>Type</th><th class="hide-m">Next renewal</th></tr>${list.map(c=>{
+    const dates=[...D.crm_deals.filter(d=>d.client_code===c.code&&d.status==='Active').map(renewalDate),...D.crm_policies.filter(p=>p.client_code===c.code&&p.status==='Active').map(p=>p.renewal_date)].filter(Boolean).sort();
+    return `<tr class="go" onclick="go('client/${c.code}')"><td><b>${esc(cname(c))}</b> <span class="small muted">${esc(c.code)}</span></td><td class="hide-m small">${esc(c.email||'')}<br>${esc(c.phone||'')}</td><td><span class="pill p-acc">${esc(c.kind)}</span></td><td class="hide-m">${dates[0]?fdate(dates[0])+' '+renewPill(dates[0]):'<span class="muted">—</span>'}</td></tr>`;}).join('')}</table></div>`;
+}
+function drawClients(){ const q=CQ.toLowerCase(); const list=D.crm_clients.filter(c=>(CK==='All'||c.kind===CK||c.kind==='Both')&&(!q||[c.code,c.last_name,c.first_name,c.email,c.phone].join(' ').toLowerCase().includes(q))).sort((a,b)=>cname(a).localeCompare(cname(b))); $('#clist').innerHTML=clientRows(list); }
+
+function pageClient(code){
+  const c=clientBy(code); if(!c) return shell('clients','<h1>Client not found</h1><p><a href="#/clients">Back to clients</a></p>');
+  const deals=D.crm_deals.filter(d=>d.client_code===code).sort((a,b)=>(b.funded_date||'').localeCompare(a.funded_date||''));
+  const pols=D.crm_policies.filter(p=>p.client_code===code);
+  const notes=D.crm_notes.filter(n=>n.client_code===code).sort((a,b)=>b.at.localeCompare(a.at));
+  const fileMail=S().file_email;
+  return shell('clients',`<p class="small"><a href="#/clients">← Clients</a></p>
+  <div class="spread"><div><h1>${esc(cname(c))}</h1><div class="muted">${esc(c.code)} · ${esc(c.kind)}${c.source?' · from '+esc(c.source):''}</div></div>
+  <div class="row">
+    ${c.email?`<a class="btn pri" href="${gmailLink(c.email)}" target="_blank" rel="noopener">✉️ Email</a>`:'<span class="btn" style="opacity:.5" title="Add an email address first">✉️ Email</span>'}
+    ${c.phone?`<a class="btn" href="tel:${esc(c.phone.replace(/[^\d+]/g,''))}">📞 Call</a>`:''}
+    <a class="btn" href="${esc(driveLink(c))}" target="_blank" rel="noopener">📁 Drive folder</a>
+    ${fileMail?`<a class="btn" href="mailto:${esc(fileMail)}?subject=${encodeURIComponent(cname(c)+' ('+c.code+')')}">📥 Send docs to file</a>`:''}
+    <button class="btn" onclick="editClient('${c.code}')">Edit</button></div></div>
+  <div class="card"><div class="kv"><div>Email</div><div>${esc(c.email||'—')}</div><div>Phone</div><div>${esc(c.phone||'—')}</div><div>Client since</div><div>${fdate(c.created_at)}</div>${c.notes?`<div>About</div><div style="white-space:pre-wrap">${esc(c.notes)}</div>`:''}</div></div>
+  <div class="card"><div class="spread"><h2 style="margin:0">Mortgages</h2><button class="btn sm" onclick="editDeal(null,'${c.code}')">+ Add a mortgage</button></div>
+  ${deals.length?`<div class="tablewrap"><table><tr><th>Lender / property</th><th class="num">Amount</th><th>Renews</th><th>Status</th><th class="num">Commission</th></tr>${deals.map(d=>`<tr class="go" onclick="editDeal('${d.id}')"><td><b>${esc(d.lender||'—')}</b><div class="small muted">${esc(d.property||'')}${d.rate?' · '+d.rate+'%':''}${d.term_months?' · '+d.term_months/12+' yr':''}</div></td><td class="num">${money(d.amount)}</td><td>${fdate(renewalDate(d))}<div>${d.status==='Active'?renewPill(renewalDate(d)):''}</div></td><td><span class="pill p-mute">${esc(d.status)}</span></td><td class="num">${money(netOf(d))}<div>${d.gross?(d.paid?'<span class="pill p-ok">Paid</span>':'<span class="pill p-warn">Not paid</span>'):''}</div></td></tr>`).join('')}</table></div>`:'<div class="empty">No mortgages yet.</div>'}</div>
+  <div class="card"><div class="spread"><h2 style="margin:0">Insurance</h2><button class="btn sm" onclick="editPolicy(null,'${c.code}')">+ Add a policy</button></div>
+  ${pols.length?`<div class="tablewrap"><table><tr><th>Policy</th><th class="num">Premium</th><th>Renews</th><th class="num">Commission</th></tr>${pols.map(p=>`<tr class="go" onclick="editPolicy('${p.id}')"><td><b>${esc(p.product||'Policy')}</b> · ${esc(p.carrier||'')}<div class="small muted">${esc(p.policy_no||'')} · ${esc(p.status)}</div></td><td class="num">${money(p.premium)}<div class="small muted">${esc(p.frequency||'')}</div></td><td>${fdate(p.renewal_date)}</td><td class="num">${money(netOf(p))}<div>${p.gross?(p.paid?'<span class="pill p-ok">Paid</span>':'<span class="pill p-warn">Not paid</span>'):''}</div></td></tr>`).join('')}</table></div>`:'<div class="empty">No policies yet. Statements are filed in the client\'s Drive folder.</div>'}</div>
+  <div class="card"><h2>Notes</h2><div class="row" style="margin-bottom:14px;align-items:flex-start"><textarea id="newnote" placeholder="Call, email, next step…" style="flex:1;min-height:50px"></textarea><button class="btn pri" onclick="addNote('${c.code}')">Add note</button></div>
+  ${notes.length?notes.map(n=>`<div class="note"><div class="when">${new Date(n.at).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short'})} · <a href="#" onclick="delNote('${n.id}');return false" class="muted">delete</a></div><div style="white-space:pre-wrap">${esc(n.text)}</div></div>`).join(''):'<div class="empty">No notes yet.</div>'}</div>`);
+}
+
+let RT='mortgage';
+function pageRenewals(){
+  const s=S();
+  const rows = RT==='mortgage'
+    ? D.crm_deals.filter(d=>d.status==='Active').map(d=>({kind:'Mortgage',x:d,date:renewalDate(d)}))
+    : D.crm_policies.filter(p=>p.status==='Active').map(p=>({kind:p.product||'Insurance',x:p,date:p.renewal_date}));
+  rows.sort((a,b)=>(a.date||'9').localeCompare(b.date||'9'));
+  return shell('renewals',`<h1>Renewals</h1><p class="sub">Red = contact now (within ${s.contact_days} days) · amber = coming up (within ${s.upcoming_days} days). Change these in Settings.</p>
+  <div class="tabs"><button class="${RT==='mortgage'?'on':''}" onclick="RT='mortgage';render()">Mortgages</button><button class="${RT==='insurance'?'on':''}" onclick="RT='insurance';render()">Insurance</button></div>
+  <div class="card">${renewTable(rows)}</div>`);
+}
+
+let CMF='unpaid';
+function pageCommissions(){
+  const all=[...D.crm_deals.map(x=>({t:'Mortgage',x})),...D.crm_policies.map(x=>({t:x.product||'Insurance',x}))].filter(r=>r.x.gross);
+  const rows=all.filter(r=>CMF==='all'||(CMF==='unpaid'?!r.x.paid:r.x.paid)).sort((a,b)=>(b.x.funded_date||b.x.start_date||'').localeCompare(a.x.funded_date||a.x.start_date||''));
+  const yr=String(new Date().getFullYear());
+  const sum=f=>all.filter(f).reduce((a,r)=>a+(netOf(r.x)||0),0);
+  const recvYr=all.filter(r=>r.x.paid&&(r.x.paid_date||'').startsWith(yr)).reduce((a,r)=>a+Number(r.x.received ?? netOf(r.x) ?? 0),0);
+  return shell('commissions',`<h1>Commissions</h1><p class="sub">Your share = gross × your split (default ${S().default_split}%, change it per deal).</p>
+  <div class="grid"><div class="stat"><div class="n">${money(sum(r=>!r.x.paid))}</div><div class="l">waiting to be paid</div></div><div class="stat"><div class="n">${money(recvYr)}</div><div class="l">received in ${yr}</div></div></div>
+  <div class="tabs">${[['unpaid','Not paid'],['paid','Paid'],['all','All']].map(([k,l])=>`<button class="${CMF===k?'on':''}" onclick="CMF='${k}';render()">${l}</button>`).join('')}</div>
+  <div class="card">${rows.length?`<div class="tablewrap"><table><tr><th>Client</th><th>What</th><th class="num">Gross</th><th class="num">Split</th><th class="num">Your share</th><th>Paid</th></tr>${rows.map(({t,x})=>`<tr><td><a href="#/client/${x.client_code}"><b>${esc(cname(clientBy(x.client_code)))}</b></a></td><td>${esc(t)}<div class="small muted">${esc(x.lender||x.carrier||'')} · ${fdate(x.funded_date||x.start_date)}</div></td><td class="num">${money(x.gross)}</td><td class="num">${splitOf(x)}%${x.split!=null&&x.split!==''?'':' <span class="small muted">(default)</span>'}</td><td class="num"><b>${money(netOf(x))}</b></td><td>${x.paid?`<span class="pill p-ok">Paid ${fdate(x.paid_date)}</span>`:`<button class="btn sm" onclick="markPaid('${t==='Mortgage'?'crm_deals':'crm_policies'}','${x.id}')">Mark paid</button>`}</td></tr>`).join('')}</table></div>`:'<div class="empty">Nothing here.</div>'}</div>`);
+}
+
+function pageAdspend(){
+  const rows=[...D.crm_adspend].sort((a,b)=>b.day.localeCompare(a.day));
+  const months={};
+  rows.forEach(r=>{ const m=r.day.slice(0,7); months[m]=months[m]||{}; const p=months[m][r.platform]=months[m][r.platform]||{a:0,l:0}; p.a+=Number(r.amount||0); p.l+=Number(r.leads||0); });
+  const mrows=Object.keys(months).sort().reverse().slice(0,6).flatMap(m=>Object.entries(months[m]).map(([p,v])=>({m,p,...v})));
+  const mname=m=>new Date(m+'-15').toLocaleDateString('en-CA',{month:'long',year:'numeric'});
+  const fromAds=D.crm_clients.filter(c=>/ads|facebook|instagram|google/i.test(c.source||'')).length;
+  return shell('adspend',`<div class="spread"><div><h1>Ad spend</h1><p class="sub" style="margin:0">${fromAds} clients came from ads (set "Where from" on each client).</p></div><button class="btn pri" onclick="editAd()">+ Add spend</button></div>
+  <div class="card"><h2>By month</h2>${mrows.length?`<div class="tablewrap"><table><tr><th>Month</th><th>Platform</th><th class="num">Spent</th><th class="num">Leads</th><th class="num">Cost per lead</th></tr>${mrows.map(r=>`<tr><td>${mname(r.m)}</td><td>${esc(r.p)}</td><td class="num">${money(r.a)}</td><td class="num">${r.l}</td><td class="num">${r.l?money(r.a/r.l):'—'}</td></tr>`).join('')}</table></div>`:'<div class="empty">No spend logged yet.</div>'}</div>
+  <div class="card"><h2>Every entry</h2>${rows.length?`<div class="tablewrap"><table><tr><th>Date</th><th>Platform</th><th class="hide-m">Campaign</th><th class="num">Amount</th><th class="num">Leads</th></tr>${rows.map(r=>`<tr class="go" onclick="editAd('${r.id}')"><td>${fdate(r.day)}</td><td>${esc(r.platform)}</td><td class="hide-m">${esc(r.campaign||'')}</td><td class="num">${money(r.amount)}</td><td class="num">${r.leads??'—'}</td></tr>`).join('')}</table></div>`:'<div class="empty">Nothing yet.</div>'}</div>`);
+}
+
+function pageSettings(){
+  const s=S();
+  return shell('settings',`<h1>Settings</h1><p class="sub">These apply to every deal unless a deal has its own split.</p>
+  <div class="card"><div class="form">
+    <div><label>Your default split (% of gross)</label><input type="number" id="s_split" value="${esc(s.default_split)}" step="0.5"></div>
+    <div><label>"Contact now" when renewal is within (days)</label><input type="number" id="s_contact" value="${esc(s.contact_days)}"></div>
+    <div><label>"Coming up" when renewal is within (days)</label><input type="number" id="s_up" value="${esc(s.upcoming_days)}"></div>
+    <div><label>Your "send docs to file" address</label><input type="email" id="s_file" value="${esc(s.file_email||'')}" placeholder="yourname+file@gmail.com"></div>
+  </div><p><button class="btn pri" onclick="saveSettings()">Save settings</button></p></div>
+  ${DEMO?'<div class="card"><h2>Demo data</h2><p class="muted">Start the made-up data over.</p><button class="btn danger" onclick="localStorage.removeItem(\'crm_demo\');boot()">Reset demo data</button></div>':''}`);
+}
+
+// ---------- forms ----------
+function openModal(html){ $('#mbox').innerHTML=html; $('#modal').classList.add('on'); const f=$('#mbox input,#mbox select'); if(f) f.focus(); }
+function closeModal(){ $('#modal').classList.remove('on'); }
+$('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+const fv=id=>{ const el=document.getElementById(id); if(!el) return null; if(el.type==='checkbox') return el.checked; const v=el.value.trim(); if(el.type==='number') return v===''?null:Number(v); return v===''?null:v; };
+const inp=(id,label,val,type='text',extra='')=>`<div ${type==='textarea'?'class="wide"':''}><label for="${id}">${label}</label>${type==='textarea'?`<textarea id="${id}">${esc(val)}</textarea>`:`<input type="${type}" id="${id}" value="${esc(val)}" ${extra}>`}</div>`;
+const sel=(id,label,val,opts)=>`<div><label for="${id}">${label}</label><select id="${id}">${opts.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join('')}</select></div>`;
+const formBtns=(saveFn,delFn)=>`<div class="spread" style="margin:18px 0 0"><div>${delFn?`<button class="btn danger" onclick="${delFn}">Delete</button>`:''}</div><div class="row"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="${saveFn}">Save</button></div></div>`;
+
+function editClient(code){
+  const c=code?clientBy(code):{code:nextCode(),kind:'Mortgage'};
+  openModal(`<h2>${code?'Edit client':'New client'}</h2><div class="form">
+    ${inp('f_last','Last name',c.last_name)}${inp('f_first','First name(s)',c.first_name)}
+    ${inp('f_code','Client ID',c.code,'text',code?'readonly':'')}${sel('f_kind','Type',c.kind,['Mortgage','Insurance','Both'])}
+    ${inp('f_email','Email',c.email,'email')}${inp('f_phone','Phone',c.phone,'tel')}
+    ${inp('f_source','Where from (ad, referral…)',c.source)}${inp('f_drive','Drive folder link (optional)',c.drive_url,'text','placeholder="Leave empty to search Drive by client ID"')}
+    ${inp('f_notes','About this client',c.notes,'textarea')}
+  </div>${formBtns(`saveClient(${code?`'${code}'`:'null'})`,code?`delClient('${code}')`:null)}`);
+}
+async function saveClient(code){
+  const row={code:fv('f_code'),last_name:fv('f_last'),first_name:fv('f_first')||'',kind:fv('f_kind'),email:fv('f_email'),phone:fv('f_phone'),source:fv('f_source'),drive_url:fv('f_drive'),notes:fv('f_notes')};
+  if(!row.last_name) return toast('Add a last name');
+  if(!code && clientBy(row.code)) return toast('That client ID is taken');
+  if(!code) row.created_at=new Date().toISOString();
+  await run(()=>save('crm_clients',row),'Saved'); closeModal(); if(!code) go('client/'+row.code); else render();
+}
+async function delClient(code){ if(!confirm('Delete this client and all their mortgages, policies and notes? Their Drive folder is not touched.')) return; await run(()=>remove('crm_clients',code),'Deleted'); closeModal(); go('clients'); }
+
+function editDeal(id,code){
+  const d=id?D.crm_deals.find(x=>x.id===id):{client_code:code,status:'In progress',term_months:60,paid:false};
+  openModal(`<h2>${id?'Mortgage':'New mortgage'} — ${esc(cname(clientBy(d.client_code)))}</h2><div class="form">
+    ${inp('f_lender','Lender',d.lender)}${inp('f_prop','Property address',d.property)}
+    ${inp('f_amt','Mortgage amount',d.amount,'number')}${inp('f_rate','Rate %',d.rate,'number','step="0.01"')}
+    ${inp('f_term','Term (months)',d.term_months,'number')}${sel('f_status','Status',d.status,['In progress','Active','Renewed','Paid out','Lost'])}
+    ${inp('f_funded','Funded date',d.funded_date,'date')}${inp('f_mat','Lender maturity date (if known)',d.maturity_date,'date')}
+    ${inp('f_outcome','Renewal outcome',d.renewal_outcome)}
+    ${inp('f_gross','Gross commission',d.gross,'number','step="0.01"')}${inp('f_split','Your split % (empty = default '+S().default_split+'%)',d.split,'number','step="0.5"')}
+    <div><label><input type="checkbox" id="f_paid" ${d.paid?'checked':''}> Commission paid</label></div>
+    ${inp('f_pdate','Paid date',d.paid_date,'date')}${inp('f_recv','Amount received',d.received,'number','step="0.01"')}
+    ${inp('f_dnotes','Notes',d.notes,'textarea')}
+  </div><p class="small muted">Renewal date = the lender's maturity date, or funded date + term.</p>${formBtns(`saveDeal(${id?`'${id}'`:'null'},'${d.client_code}')`,id?`delRow('crm_deals','${id}')`:null)}`);
+}
+async function saveDeal(id,code){
+  const row={client_code:code,lender:fv('f_lender'),property:fv('f_prop'),amount:fv('f_amt'),rate:fv('f_rate'),term_months:fv('f_term'),status:fv('f_status'),funded_date:fv('f_funded'),maturity_date:fv('f_mat'),renewal_outcome:fv('f_outcome'),gross:fv('f_gross'),split:fv('f_split'),paid:fv('f_paid'),paid_date:fv('f_pdate'),received:fv('f_recv'),notes:fv('f_dnotes')};
+  if(row.paid&&!row.paid_date) row.paid_date=iso(new Date());
+  if(id) row.id=id;
+  await run(()=>save('crm_deals',row),'Saved'); closeModal(); render();
+}
+function editPolicy(id,code){
+  const p=id?D.crm_policies.find(x=>x.id===id):{client_code:code,status:'Active',frequency:'Monthly',paid:false};
+  openModal(`<h2>${id?'Policy':'New policy'} — ${esc(cname(clientBy(p.client_code)))}</h2><div class="form">
+    ${sel('f_prod','Product',p.product||'Life',['Life','Critical illness','Disability','Health & dental','Mortgage protection','Travel','Home','Auto','Other'])}${inp('f_carrier','Insurance company',p.carrier)}
+    ${inp('f_pno','Policy number',p.policy_no)}${sel('f_pstatus','Status',p.status,['Applied','Active','Lapsed','Cancelled'])}
+    ${inp('f_prem','Premium',p.premium,'number','step="0.01"')}${sel('f_freq','Paid',p.frequency,['Monthly','Yearly'])}
+    ${inp('f_start','Start date',p.start_date,'date')}${inp('f_ren','Renewal / review date',p.renewal_date,'date')}
+    ${inp('f_gross','Gross commission',p.gross,'number','step="0.01"')}${inp('f_split','Your split % (empty = default '+S().default_split+'%)',p.split,'number','step="0.5"')}
+    <div><label><input type="checkbox" id="f_paid" ${p.paid?'checked':''}> Commission paid</label></div>
+    ${inp('f_pdate','Paid date',p.paid_date,'date')}${inp('f_recv','Amount received',p.received,'number','step="0.01"')}
+    ${inp('f_pnotes','Notes',p.notes,'textarea')}
+  </div>${formBtns(`savePolicy(${id?`'${id}'`:'null'},'${p.client_code}')`,id?`delRow('crm_policies','${id}')`:null)}`);
+}
+async function savePolicy(id,code){
+  const row={client_code:code,product:fv('f_prod'),carrier:fv('f_carrier'),policy_no:fv('f_pno'),status:fv('f_pstatus'),premium:fv('f_prem'),frequency:fv('f_freq'),start_date:fv('f_start'),renewal_date:fv('f_ren'),gross:fv('f_gross'),split:fv('f_split'),paid:fv('f_paid'),paid_date:fv('f_pdate'),received:fv('f_recv'),notes:fv('f_pnotes')};
+  if(row.paid&&!row.paid_date) row.paid_date=iso(new Date());
+  if(id) row.id=id;
+  await run(()=>save('crm_policies',row),'Saved'); closeModal(); render();
+}
+function editAd(id){
+  const a=id?D.crm_adspend.find(x=>x.id===id):{day:iso(new Date()),platform:'Google Ads'};
+  const plats=[...new Set(['Google Ads','Facebook','Instagram','LinkedIn','Other',...D.crm_adspend.map(x=>x.platform)])];
+  openModal(`<h2>${id?'Ad spend':'Add ad spend'}</h2><div class="form">
+    ${inp('f_day','Date',a.day,'date')}${sel('f_plat','Platform',a.platform,plats)}
+    ${inp('f_camp','Campaign',a.campaign)}${inp('f_amtA','Amount spent',a.amount,'number','step="0.01"')}
+    ${inp('f_leads','Leads',a.leads,'number')}${inp('f_anotes','Notes',a.notes,'textarea')}
+  </div>${formBtns(`saveAd(${id?`'${id}'`:'null'})`,id?`delRow('crm_adspend','${id}')`:null)}`);
+}
+async function saveAd(id){
+  const row={day:fv('f_day'),platform:fv('f_plat'),campaign:fv('f_camp'),amount:fv('f_amtA')||0,leads:fv('f_leads'),notes:fv('f_anotes')};
+  if(!row.day) return toast('Add a date'); if(id) row.id=id;
+  await run(()=>save('crm_adspend',row),'Saved'); closeModal(); render();
+}
+async function delRow(t,id){ if(!confirm('Delete this?')) return; await run(()=>remove(t,id),'Deleted'); closeModal(); render(); }
+async function addNote(code){ const t=$('#newnote').value.trim(); if(!t) return; await run(()=>save('crm_notes',{client_code:code,at:new Date().toISOString(),text:t}),'Note added'); render(); }
+async function delNote(id){ if(!confirm('Delete this note?')) return; await run(()=>remove('crm_notes',id),'Deleted'); render(); }
+async function markPaid(t,id){ const x=D[t].find(r=>r.id===id); await run(()=>save(t,{id,paid:true,paid_date:iso(new Date()),received:x.received??netOf(x)}),'Marked paid'); render(); }
+async function saveSettings(){ await run(()=>save('crm_settings',{id:1,default_split:fv('s_split')??90,contact_days:fv('s_contact')??120,upcoming_days:fv('s_up')??180,file_email:fv('s_file')}),'Settings saved'); render(); }
+async function run(fn,msg){ try{ await fn(); toast(msg); }catch(e){ console.error(e); alert('That did not save: '+(e.message||e)); throw e; } }
+
+// ---------- routing and login ----------
+function go(p){ location.hash='#/'+p; }
+function render(){
+  const h=(location.hash||'#/home').slice(2).split('/');
+  const pages={home:pageHome,clients:pageClients,renewals:pageRenewals,commissions:pageCommissions,adspend:pageAdspend,settings:pageSettings};
+  $('#root').innerHTML = h[0]==='client' ? pageClient(decodeURIComponent(h[1]||'')) : (pages[h[0]]||pageHome)();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',()=>{ if(D.crm_clients) render(); });
+
+function loginScreen(msg){
+  $('#root').innerHTML=`<div class="login"><h1>Hu's CRM</h1><p class="muted">Enter your email and we'll send you a sign-in code.</p>
+  <div id="lstep"><label>Email</label><input type="email" id="lemail" autocomplete="email"><p><button class="btn pri" onclick="sendCode()">Send me a code</button></p></div>
+  <p class="small" style="color:var(--bad)">${esc(msg||'')}</p></div>`;
+}
+async function sendCode(){
+  const email=fv('lemail'); if(!email) return;
+  const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
+  if(error) return loginScreen('Could not send a code: '+error.message);
+  $('#lstep').innerHTML=`<p>We sent a code to <b>${esc(email)}</b>.</p><label>Code</label><input type="text" id="lcode" inputmode="numeric" autocomplete="one-time-code"><p><button class="btn pri" onclick="checkCode('${esc(email)}')">Sign in</button></p>`;
+  $('#lcode').focus();
+}
+async function checkCode(email){
+  const {error}=await sb.auth.verifyOtp({email,token:fv('lcode'),type:'email'});
+  if(error) return loginScreen('That code did not work: '+error.message);
+  boot();
+}
+async function signOut(){ await sb.auth.signOut(); loginScreen(); }
+
+async function boot(){
+  if(!DEMO){
+    const {data}=await sb.auth.getSession();
+    if(!data.session) return loginScreen();
+  }
+  try{ await loadAll(); }catch(e){ return DEMO?alert(e):loginScreen('This account cannot open the CRM.'); }
+  if(!D.crm_settings||!D.crm_settings.length) D.crm_settings=[{id:1,default_split:90,contact_days:120,upcoming_days:180}];
+  render();
+}
+boot();
+</script>
+</body>
+</html>
