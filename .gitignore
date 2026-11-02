@@ -1,0 +1,10 @@
+# Client and financial data never goes in git
+clients/*
+!clients/README.md
+ad-spend/*
+!ad-spend/README.md
+*.pdf
+*.xlsx
+*.csv
+.env
+.DS_Store
