@@ -420,9 +420,9 @@ function loginScreen(msg){
 }
 async function sendCode(){
   const email=fv('lemail'); if(!email) return;
-  const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
+  const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:location.origin+location.pathname}});
   if(error) return loginScreen('Could not send a code: '+error.message);
-  $('#lstep').innerHTML=`<p>We sent a code to <b>${esc(email)}</b>.</p><label>Code</label><input type="text" id="lcode" inputmode="numeric" autocomplete="one-time-code"><p><button class="btn pri" onclick="checkCode('${esc(email)}')">Sign in</button></p>`;
+  $('#lstep').innerHTML=`<p>We sent a sign-in email to <b>${esc(email)}</b>. Open it on this device and tap the link — or, if the email shows a code, type it here.</p><label>Code</label><input type="text" id="lcode" inputmode="numeric" autocomplete="one-time-code"><p><button class="btn pri" onclick="checkCode('${esc(email)}')">Sign in</button></p>`;
   $('#lcode').focus();
 }
 async function checkCode(email){
